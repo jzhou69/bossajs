@@ -4,18 +4,21 @@ var Model = bookshelf.model.prototype
 
 var Task = bookshelf.Model.extend({
   tableName: 'tasks',
-  addQuestion: function(contentString){
+  addQuestion: function(content){
     var task = this;
-    Question.createQuestion(task.get('id'), contentString)
+    Question.createQuestion(task.get('id'), content)
   }
 }, {
   createTask: function(name){
     var task = new Task({
       name: name,
       redundancy: 1,
-      presenter: ''
+      presenter: '',
+      completed: false
     })
-    return task.save()
+    task.save().then(() => {
+      return task;
+    })
   }
 })
 
