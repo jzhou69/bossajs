@@ -1,0 +1,25 @@
+{
+  "name": "bossajs",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "bookshelf": "0.9.5",
+    "cors": "^2.8.4",
+    "history": "^4.7.2",
+    "knex": "^0.15.2",
+    "pg": "^7.4.3",
+    "react": "^16.4.2",
+    "react-dom": "^16.4.2",
+    "react-redux": "^5.0.7",
+    "react-router-dom": "^4.3.1",
+    "react-router-redux": "5.0.0-alpha.2",
+    "react-scripts": "1.1.5",
+    "redux": "^4.0.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  }
+}
