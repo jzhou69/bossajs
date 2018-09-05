@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux';
-import { loadTask, updateTask } from './../redux/actions/actions'
+import { loadTask, updateTask, addQuestions, exportAnswers } from './../redux/actions/actions'
 import {Controlled as CodeMirror} from 'react-codemirror2'
 import 'codemirror/lib/codemirror.css';
 import 'codemirror/theme/monokai.css';
@@ -15,7 +15,8 @@ class Task extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      presenterValue: undefined
+      presenterValue: undefined,
+      questionsValue: undefined
     };
   }
 
@@ -31,7 +32,7 @@ class Task extends React.Component {
     return (
       <div>
         <button>QA some questions</button>
-        <button>Export results</button>
+        <button onClick={() => this.props.exportAnswers(task.id)}>Export results</button>
       </div>
     )
   }
@@ -56,9 +57,33 @@ class Task extends React.Component {
           this.props.updateTask(task.id, this.state.presenterValue.split('\n').join('\\n'));
           window.location.reload();
         }}>Save</button>
-        <div>Import Questions</div>
-        <textarea></textarea>
-        <button>Import</button>
+        <div>Import Questions; Note all fields must be strings</div>
+        <CodeMirror
+          value={this.state.questionsValue}
+          options={{
+            mode: 'xml',
+            theme: 'material',
+            lineNumbers: true
+          }}
+          onBeforeChange={(editor, data, value) => {
+            this.setState({questionsValue: value});
+          }}
+        />
+        <button onClick={() => {
+          var questionsUnprocessed = this.state.questionsValue.split('\n');
+          var header = questionsUnprocessed[0].split('|');
+          var questionsProcessed = []
+          for(let i=1; i < questionsUnprocessed.length; i++){
+            let questionString = questionsUnprocessed[i].split('|')
+            let question = {};
+            for(let j=0; j < header.length; j++){
+              question[header[j]] = questionString[j];
+            }
+            questionsProcessed.push(question)
+          }
+          this.props.addQuestions(task.id, questionsProcessed);
+          window.location.reload();
+        }}>Import</button>
       </div>
     )
   }
@@ -76,4 +101,4 @@ class Task extends React.Component {
   }
 }
 
-export default connect(mapStateToProps, { loadTask, updateTask })(Task);
+export default connect(mapStateToProps, { loadTask, updateTask, addQuestions, exportAnswers })(Task);

@@ -5,13 +5,12 @@ knex.schema.createTable('tasks', function(table){
   table.string('name')
   table.text('presenter','longtext')
   table.integer('redundancy');
-  table.boolean('completed')
-}).then(function(){
+}).catch(function(){
   return knex.schema.createTable('questions', function(table){
     table.increments('id').primary();
     table.integer('taskId');
     table.json('content');
-    table.string('answer');
+    table.text('answer', 'longtext');
   })
 }).then(function(){
   return knex.schema.createTable('users', function(table){

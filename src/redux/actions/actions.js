@@ -31,6 +31,15 @@ export function updateTask(id, presenter){
   }
 }
 
+export function addQuestions(id, questions){
+  return (dispatch) => {
+    axios.post(`${url}task/question/string?taskId=${id}&questions=${JSON.stringify(questions)}`).then((res) => {
+      let task = res.data;
+      dispatch({type:'LOAD_TASK', task: task}) // eventually, we'll display # of questions
+    })
+  }
+}
+
 export function loadTask(_id){
   return (dispatch) => {
     axios.get(`${url}task?taskId=${_id}`).then((res) => {
@@ -48,6 +57,22 @@ export function loadQuestion(_taskId){
       let question = res.data;
       dispatch({type:'LOAD_QUESTION', question: question});
     }).catch((err) => {
+      console.log(err);
+    })
+  }
+}
+
+export function recordAnswer(id, answer){
+  return () => {
+    axios.post(`${url}task/question/answer?questionId=${id}&answer=${JSON.stringify(answer)}`).catch((err) => {
+      console.log(err);
+    })
+  }
+}
+
+export function exportAnswers(id){
+  return () => {
+    axios.get(`${url}task/export?taskId=${id}`).catch((err) => {
       console.log(err);
     })
   }

@@ -13,8 +13,7 @@ var Task = bookshelf.Model.extend({
     var task = new Task({
       name: name,
       redundancy: 1,
-      presenter: '',
-      completed: false
+      presenter: ''
     })
     task.save().then(() => {
       return task;

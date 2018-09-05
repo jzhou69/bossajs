@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux';
-import { loadQuestion } from './../redux/actions/actions'
+import { loadQuestion, recordAnswer } from './../redux/actions/actions'
 
 var mapStateToProps = (state) => {
     return {
@@ -8,14 +8,16 @@ var mapStateToProps = (state) => {
     }
 }
 
-const question = {
+/* for testing purposes only:
+const question2 = {
   image: 'html://www.linktoimage.com',
-  options: ['red', 'yellow', 'blue'],
+  options: '["red", "yellow", "blue"]',
   doSomething: function(){
     console.log('wow it worked!');
   }
 }
-//const htmlToRender = '<!DOCTYPE html>\n<html>\n<head>\n<style>\nh1 {color:red;}\np {color:blue;}\n</style>\n</head>\n<body>\n<p>My Task Presenter</p>\n<div id=\'one\'></div>\n<script>\nvar ques = window.question;\ndocument.getElementById("one").innerHTML = question.options[1];\nquestion.doSomething();\n</script>\n</body>\n</html>'
+const htmlToRender = '<!DOCTYPE html>\n<html>\n<head>\n<style>\nh1 {color:red;}\np {color:blue;}\n</style>\n</head>\n<body>\n<p>My Task Presenter</p>\n<div id=\'one\'></div>\n<script>\nif(window.bossa.question){var question = window.bossa.question;\nconsole.log("one")\ndocument.getElementById("one").innerHTML = JSON.parse(question.options)[1];}\n</script>\n</body>\n</html>'
+*/
 
 class Question extends React.Component {
   componentWillMount() {
@@ -23,6 +25,14 @@ class Question extends React.Component {
   }
 
   componentDidMount(){
+    this.enableScripts()
+  }
+
+  componentDidUpdate(){
+    this.enableScripts()
+  }
+
+  enableScripts(){
     // since <script> elements are not executable when inserted via innerHTML,
     // this function's purpose is to replace those elements with executable copies
     function nodeScriptReplace(node) {
@@ -56,17 +66,14 @@ class Question extends React.Component {
     var presenter = question.presenter
     if(presenter){
       presenter = presenter.split('\\n').join('\n')
-    }
-    /*
-    window.bossa.question = question.content
-    window.bossa.recordAnswerAndRefresh = function(answer){}
-    return (
-      <div>
-        <div id='presenter' dangerouslySetInnerHTML={{ __html: presenter }}></div>
-      </div>
-    )
-    */
-    window.question = question
+    };
+    window.bossa = {};
+    window.bossa.question = question.content;
+    window.bossa.recordAnswerAndRefresh = function(answer){
+      this.props.recordAnswer(question.id, answer)
+      this.props.loadQuestion(this.props.match.params.id)
+      window.location.reload()
+    }.bind(this);
     return (
       <div>
         <div>Task presenter is below:</div>
@@ -77,4 +84,4 @@ class Question extends React.Component {
   }
 }
 
-export default connect(mapStateToProps, { loadQuestion })(Question);
+export default connect(mapStateToProps, { loadQuestion, recordAnswer })(Question);
