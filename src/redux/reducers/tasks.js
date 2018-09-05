@@ -1,7 +1,8 @@
 const initialState = {
   tasks: [],
   task: {},
-  question: {}
+  question: {},
+  answer: ''
 }
 export default (state=initialState, action) => {
   switch (action.type) {
@@ -32,6 +33,11 @@ export default (state=initialState, action) => {
     return {
       ...state,
       question: action.question
+    }
+    case 'EXPORT_ANSWERS':
+    return {
+      ...state,
+      answer: action.answer
     }
     default:
     return state

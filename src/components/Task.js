@@ -6,9 +6,10 @@ import 'codemirror/lib/codemirror.css';
 import 'codemirror/theme/monokai.css';
 
 var mapStateToProps = (state) => {
-    return {
-        task: state.tasks.task
-    }
+  return {
+    answer: state.tasks.answer,
+    task: state.tasks.task
+  }
 }
 
 class Task extends React.Component {
@@ -25,7 +26,12 @@ class Task extends React.Component {
   }
 
   componentWillReceiveProps(props){
-    this.setState({presenterValue: props.task.presenter.split('\\n').join('\n')})
+    if(props.task.presenter){
+      this.setState({presenterValue: props.task.presenter.split('\\n').join('\n')})
+    }
+    if(props.answer){
+      document.getElementById('export').innerHTML = props.answer.split('\n').join('<br>');
+    }
   }
 
   renderCompleted(task){
@@ -33,6 +39,7 @@ class Task extends React.Component {
       <div>
         <button>QA some questions</button>
         <button onClick={() => this.props.exportAnswers(task.id)}>Export results</button>
+        <div id="export"></div>
       </div>
     )
   }
@@ -75,6 +82,9 @@ class Task extends React.Component {
           var questionsProcessed = []
           for(let i=1; i < questionsUnprocessed.length; i++){
             let questionString = questionsUnprocessed[i].split('|')
+            if(questionString.length != header.length){
+              continue;
+            }
             let question = {};
             for(let j=0; j < header.length; j++){
               question[header[j]] = questionString[j];
@@ -93,6 +103,7 @@ class Task extends React.Component {
     return (
       <div>
         <h3>{task.name}</h3>
+        <div style={{fontStyle: 'italic'}}>{task.completion} questions completed</div>
         {
           task.completed ? this.renderCompleted(task) : this.renderIncompleted(task)
         }

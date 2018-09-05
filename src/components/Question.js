@@ -63,6 +63,9 @@ class Question extends React.Component {
 
   render(){
     var question = this.props.question
+    if(question.done){
+      window.location = `/task/${this.props.match.params.id}`
+    }
     var presenter = question.presenter
     if(presenter){
       presenter = presenter.split('\\n').join('\n')
@@ -76,9 +79,7 @@ class Question extends React.Component {
     }.bind(this);
     return (
       <div>
-        <div>Task presenter is below:</div>
         <div id='presenter' dangerouslySetInnerHTML={{ __html: presenter }}></div>
-        <div>Task presenter is above ^.</div>
       </div>
     )
   }

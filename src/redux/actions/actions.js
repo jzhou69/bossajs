@@ -71,8 +71,11 @@ export function recordAnswer(id, answer){
 }
 
 export function exportAnswers(id){
-  return () => {
-    axios.get(`${url}task/export?taskId=${id}`).catch((err) => {
+  return (dispatch) => {
+    axios.get(`${url}task/export?taskId=${id}`).then((res) => {
+      var content = res.data
+      dispatch({type:'EXPORT_ANSWERS', answer: content})
+    }).catch((err) => {
       console.log(err);
     })
   }

@@ -14,8 +14,23 @@ class Tasks extends React.Component {
   }
 
   renderTasks(tasks){
+    var buttonStyle = {
+      font: 'bold 11px Arial',
+      textDecoration: 'none',
+      backgroundColor: '#33e0ff',
+      color: 'white',
+      padding: '2px 6px 2px 6px',
+      borderTop: '1px solid #CCCCCC',
+      borderRight: '1px solid #333333',
+      borderBottom: '1px solid #333333',
+      borderLeft: '1px solid #CCCCCC'
+    }
     return tasks.map((task) => {
-      return <a href={'/task/' + task.id}>{task.name}</a>
+      return (
+        <div style={{margin: '10px', borderStyle: 'groove', paddingBottom: '20px'}}>
+          <a href={'/task/' + task.id} style={buttonStyle}>{task.name}</a>
+        </div>
+      )
     })
   }
 
@@ -23,9 +38,11 @@ class Tasks extends React.Component {
     return (
       <div>
         <h3>Tasks</h3>
-        <div>{this.renderTasks(this.props.tasks)}</div>
+        <div style={{display: 'flex'}}>
+          {this.renderTasks(this.props.tasks)}
+        </div>
         <div>Create Task</div>
-        <input id='newTaskName'></input>
+        <input id='newTaskName' placeholder='Task Name'></input>
         <button onClick={() => {
           this.props.createTask(document.getElementById('newTaskName').value);
           window.location.reload();
