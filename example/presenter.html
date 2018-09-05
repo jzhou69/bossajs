@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <p>What is a synonym for the following word?</p>
+    <div style='font-weight: bold' id='mysynonym'></div>
+    <p>Select an option from below:</p>
+    <form id='options'></form>
+    <button onclick='doSomething()'>Submit</button>
+    <script>
+      var question = window.bossa.question;
+      document.getElementById("mysynonym").innerHTML = question.synonym;
+      JSON.parse(question.options).forEach(function(option){
+        var radio = document.createElement('input')
+        radio.type = 'radio'
+        radio.id = option
+        radio.name = 'synonym'
+        radio.value = option
+
+        var label = document.createElement('label');
+        label.htmlFor = radio.id;
+        label.innerHTML = option;
+        document.getElementById("options").appendChild(radio)
+        document.getElementById("options").appendChild(label)
+        document.getElementById("options").appendChild(document.createElement('br'))
+      })
+      function doSomething(){
+        var answer = {
+          synonym: question.synonym,
+          answer: document.querySelector('input:checked').value
+        }
+        window.bossa.recordAnswerAndRefresh(JSON.stringify(answer));
+      }
+    </script>
+  </body>
+</html>
