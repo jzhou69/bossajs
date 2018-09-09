@@ -1,4 +1,5 @@
 import axios from 'axios'
+axios.defaults.withCredentials = true;
 
 const url = "http://localhost:5000/api/"
 
@@ -77,6 +78,24 @@ export function exportAnswers(id){
       dispatch({type:'EXPORT_ANSWERS', answer: content})
     }).catch((err) => {
       console.log(err);
+    })
+  }
+}
+
+export function login(username, password){
+  return () => {
+    axios.post(`${url}user/authenticate?username=${username}&password=${password}`).catch((err) => {
+      console.log(err)
+    }).then((res) => {
+      console.log(res)
+    })
+  }
+}
+
+export function createAccount(username, password){
+  return () => {
+    axios.post(`${url}user/create?username=${username}&password=${password}`).catch((err) => {
+      console.log(err)
     })
   }
 }

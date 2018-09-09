@@ -4,6 +4,7 @@ import Tasks from './components/Tasks'
 import Task from './components/Task'
 import Question from './components/Question'
 import CreateTask from './components/CreateTask'
+import Login from './components/Login'
 
 class App extends Component {
   render() {
@@ -14,6 +15,7 @@ class App extends Component {
           <Route path="/task/:id/question" component={Question} />
           <Route path="/task/:id" component={Task} />
           <Route path="/create" component={CreateTask} />
+          <Route path="/login" component={Login} />
           <Route path="**" component={Tasks} />
         </Switch>
       </div>

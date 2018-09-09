@@ -2,7 +2,7 @@ var knex = require('../server/config/database').knex
 
 knex.schema.createTable('tasks', function(table){
   table.increments('id').primary();
-  table.string('name')
+  table.string('name') // TODO unique
   table.text('presenter','longtext')
   table.integer('redundancy');
 }).catch(function(){
@@ -15,7 +15,7 @@ knex.schema.createTable('tasks', function(table){
 }).then(function(){
   return knex.schema.createTable('users', function(table){
     table.increments('id').primary();
-    table.string('username');
+    table.string('username'); // TODO unique
     table.string('password');
     table.integer('privilege');
   })
