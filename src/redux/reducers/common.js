@@ -1,16 +1,9 @@
 const defaultState = {
-  appName: '',
-  modalMode: false
 };
-
+// TODO: add error field to state
+// TODO: add user field to state
 export default (state = defaultState, action) => {
   switch (action.type) {
-    case 'TOGGLE_MODAL':
-      return {
-        ...defaultState,
-        modalMode: action.modalMode
-      }
-
     default:
       return state;
   }

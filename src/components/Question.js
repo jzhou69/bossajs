@@ -8,17 +8,6 @@ var mapStateToProps = (state) => {
     }
 }
 
-/* for testing purposes only:
-const question2 = {
-  image: 'html://www.linktoimage.com',
-  options: '["red", "yellow", "blue"]',
-  doSomething: function(){
-    console.log('wow it worked!');
-  }
-}
-const htmlToRender = '<!DOCTYPE html>\n<html>\n<head>\n<style>\nh1 {color:red;}\np {color:blue;}\n</style>\n</head>\n<body>\n<p>My Task Presenter</p>\n<div id=\'one\'></div>\n<script>\nif(window.bossa.question){var question = window.bossa.question;\nconsole.log("one")\ndocument.getElementById("one").innerHTML = JSON.parse(question.options)[1];}\n</script>\n</body>\n</html>'
-*/
-
 class Question extends React.Component {
   componentWillMount() {
     this.props.loadQuestion(this.props.match.params.id)

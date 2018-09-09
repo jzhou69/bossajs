@@ -23,12 +23,6 @@ export default (state=initialState, action) => {
       ...state,
       task: action.task
     }
-    case 'MODOIFY_TASK':
-    let task = Object.assign({}, state.task)
-    return {
-      ...state,
-      task: task
-    }
     case 'LOAD_QUESTION':
     return {
       ...state,
