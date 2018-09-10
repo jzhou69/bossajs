@@ -5,6 +5,7 @@ import Task from './components/Task'
 import Question from './components/Question'
 import CreateTask from './components/CreateTask'
 import Login from './components/Login'
+import LoginBar from './components/LoginBar'
 import StatusMessage from './components/StatusMessage'
 
 class App extends Component {
@@ -12,6 +13,7 @@ class App extends Component {
     return (
       <div>
         <StatusMessage />
+        <LoginBar />
         <Switch>
           <Route exact path="/" component={Tasks} />
           <Route path="/task/:id/question" component={Question} />

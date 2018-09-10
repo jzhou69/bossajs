@@ -1,5 +1,6 @@
 const defaultState = {
-  error: ''
+  error: '',
+  user: {}
 };
 // TODO: add user field to state
 
@@ -9,6 +10,11 @@ export default (state = defaultState, action) => {
     return {
       ...state,
       error: action.error
+    }
+    case 'USER' :
+    return {
+      ...state,
+      user: action.user
     }
     default:
       return state;

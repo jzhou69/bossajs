@@ -6,7 +6,7 @@ const privilege = require('../models/user').privileges
 function authorize(level){
   return function(req, res, next){
     if(!req.user){
-      return res.status(401).send('You must be logged in.');
+      return res.status(401).send('You must be logged in to perform that operation.');
     }
     if(req.user.get('privilege') > level){
       return res.status(401).send('You do not have permission to perform that operation.')

@@ -28,4 +28,9 @@ module.exports = function(router){
       });
     })(req, res, next)
   })
+
+  router.route('/user/session').post(async (req, res) => {
+    // check if user is logged in
+    res.send(req.user);
+  })
 }
