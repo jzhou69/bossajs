@@ -12,7 +12,6 @@ class Login extends React.Component {
         <input id='passLog' placeholder='Password'></input>
         <button onClick={() => {
           this.props.login(document.getElementById('userLog').value, document.getElementById('passLog').value);
-          window.location.reload();
         }}>Login</button>
         <h3>Create Account</h3>
         <input id='userCreate' placeholder='Username'></input>

@@ -62,7 +62,6 @@ class Task extends React.Component {
         />
         <button onClick={() => {
           this.props.updateTask(task.id, this.state.presenterValue.split('\n').join('\\n'));
-          window.location.reload();
         }}>Save</button>
         <div>Import Questions; Note all fields must be strings</div>
         <CodeMirror
@@ -92,7 +91,6 @@ class Task extends React.Component {
             questionsProcessed.push(question)
           }
           this.props.addQuestions(task.id, questionsProcessed);
-          window.location.reload();
         }}>Import</button>
       </div>
     )

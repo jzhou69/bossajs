@@ -62,9 +62,7 @@ class Question extends React.Component {
     window.bossa = {};
     window.bossa.question = question.content;
     window.bossa.recordAnswerAndRefresh = function(answer){
-      this.props.recordAnswer(question.id, answer)
-      this.props.loadQuestion(this.props.match.params.id)
-      window.location.reload()
+      this.props.recordAnswer(question.id, answer);
     }.bind(this);
     return (
       <div>

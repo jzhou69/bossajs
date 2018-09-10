@@ -17,15 +17,12 @@ module.exports = function(router){
   router.route('/user/authenticate').post(async (req, res, next) => {
     // create a new user
     passport.authenticate('local', (err, user, info) => {
-      if(err){
-        return next(err)
-      }
-      if(!user){
-        return res.sendStatus(401);
+      if(err || !user){
+        return res.status(401).send('Authentication failed - check your username and password.');
       }
       req.login(user, function(err) {
         if(err){
-          return next(err);
+          return res.status(401).send('An unknown failure occurred.');
         }
         res.sendStatus(200);
       });

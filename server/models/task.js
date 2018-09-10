@@ -15,9 +15,7 @@ var Task = bookshelf.Model.extend({
       redundancy: 1,
       presenter: ''
     })
-    task.save().then(() => {
-      return task;
-    })
+    return task.save();
   }
 })
 

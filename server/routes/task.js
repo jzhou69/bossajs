@@ -6,10 +6,10 @@ const privilege = require('../models/user').privileges
 function authorize(level){
   return function(req, res, next){
     if(!req.user){
-      return res.sendStatus(401);
+      return res.status(401).send('You must be logged in.');
     }
     if(req.user.get('privilege') > level){
-      return res.sendStatus(401);
+      return res.status(401).send('You do not have permission to perform that operation.')
     }
     next()
   }
@@ -26,7 +26,7 @@ module.exports = function(router){
     // create a new task with specified name
     // TODO: enforce unique name
     var task = await Task.createTask(req.query.taskName);
-    res.send(task)
+    res.send(task);
   })
 
   router.route('/task').get(async (req, res) => {
@@ -46,13 +46,11 @@ module.exports = function(router){
     //req.query.redundancy && task.set('redundancy', req.query.redundancy);
     //req.query.name && task.set('name', req.query.name);
     req.query.presenter && task.set('presenter', req.query.presenter);
-    await task.save().catch((err) => {
-      console.log(err);
-    })
-    res.send(task);
+    await task.save()
+    res.sendStatus(200);
   })
 
-  router.route('/task/question').get(async (req, res) => {
+  router.route('/task/question').get(authorize(privilege['CONTRIBUTOR']), async (req, res) => {
     //get an unanswered question
     var task = await Task.where({id: req.query.taskId}).fetch();
     var question = await Question.query((qb) => {
@@ -76,7 +74,17 @@ module.exports = function(router){
     questions.forEach((question) => {
       task.addQuestion(question);
     })
-    res.send(task);
+    res.sendStatus(200);
+  })
+
+  router.route('/task/question/noauth').post(async (req, res) => {
+    //this is the same as /task/question/string, except it requires no auth; used for programmatically adding questions
+    var task = await Task.where({id: req.query.taskId}).fetch();
+    var questions = JSON.parse(req.query.questions)
+    questions.forEach((question) => {
+      task.addQuestion(question);
+    })
+    res.sendStatus(200);
   })
 
   router.route('/task/question').delete(authorize(privilege['REVIEWER']), async (req, res) => {
@@ -93,7 +101,7 @@ module.exports = function(router){
       res.sendStatus(200);
     }).catch(() => {
       // TODO: deal with multiple people trying to answer a question
-      res.sendStatus(409);
+      res.status(409).send('Question already has the maximum number of answers.');
     })
   })
 

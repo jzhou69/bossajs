@@ -5,11 +5,13 @@ import Task from './components/Task'
 import Question from './components/Question'
 import CreateTask from './components/CreateTask'
 import Login from './components/Login'
+import StatusMessage from './components/StatusMessage'
 
 class App extends Component {
   render() {
     return (
       <div>
+        <StatusMessage />
         <Switch>
           <Route exact path="/" component={Tasks} />
           <Route path="/task/:id/question" component={Question} />

@@ -45,7 +45,6 @@ class Tasks extends React.Component {
         <input id='newTaskName' placeholder='Task Name'></input>
         <button onClick={() => {
           this.props.createTask(document.getElementById('newTaskName').value);
-          window.location.reload();
         }}>Create</button>
       </div>
     )
