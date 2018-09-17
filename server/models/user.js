@@ -24,7 +24,7 @@ var User = bookshelf.Model.extend({
       password: crypto.createHmac('sha256', salt).update(password).digest('hex'),
       privilege: privilege
     });
-    return user.save()
+    return user.save();
   }
 })
 

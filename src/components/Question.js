@@ -57,7 +57,7 @@ class Question extends React.Component {
     }
     var presenter = question.presenter
     if(presenter){
-      presenter = presenter.split('\\n').join('\n')
+      presenter = presenter.split('|newline|').join('\n')
     };
     window.bossa = {};
     window.bossa.question = question.content;

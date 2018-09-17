@@ -4,10 +4,10 @@ axios.defaults.withCredentials = true; // enable sending cookies
 const url = "http://localhost:5000/api/"
 
 function dispatchError(dispatch, err){
+  if(typeof err.response.data == 'string'){
+    return dispatch({type: 'ERROR', error: err.response.data});
+  }
   if(err.response.status == 401){
-    if(typeof err.response.data == 'string'){
-      return dispatch({type: 'ERROR', error: err.response.data});
-    }
     return dispatch({type: 'ERROR', error: 'You do not have permission to perform that operation.'});
   }
   return dispatch({type: 'ERROR', error: err.message});
@@ -25,8 +25,7 @@ export function loadTasks(){
 export function createTask(name){
   return (dispatch) => {
     return axios.post(`${url}task?taskName=${name}`).then((res) => {
-      let task = res.data;
-      dispatch({type:'CREATE_TASK', task: task});
+      window.location.reload();
     }).catch(dispatchError.bind(undefined, dispatch))
   }
 }
@@ -101,7 +100,8 @@ export function verifyLogin(){
 
 export function createAccount(username, password){
   return (dispatch) => {
-    axios.post(`${url}user/create?username=${username}&password=${password}`)
-    .catch(dispatchError.bind(undefined, dispatch))
+    axios.post(`${url}user/create?username=${username}&password=${password}`).then(() => {
+      window.location.reload();
+    }).catch(dispatchError.bind(undefined, dispatch))
   }
 }

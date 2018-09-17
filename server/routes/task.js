@@ -25,8 +25,14 @@ module.exports = function(router){
   router.route('/task').post(authorize(privilege['REVIEWER']), async (req, res) => {
     // create a new task with specified name
     // TODO: enforce unique name
-    var task = await Task.createTask(req.query.taskName);
-    res.send(task);
+    var task = await Task.createTask(req.query.taskName).then(() => {
+      res.sendStatus(200);
+    }).catch((err) => {
+      if(err.code == '23505'){
+        return res.status(422).send('A task with that name already exists.');
+      }
+      res.sendStatus(500);
+    })
   })
 
   router.route('/task').get(async (req, res) => {

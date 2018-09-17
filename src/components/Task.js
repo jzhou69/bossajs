@@ -27,7 +27,7 @@ class Task extends React.Component {
 
   componentWillReceiveProps(props){
     if(props.task.presenter){
-      this.setState({presenterValue: props.task.presenter.split('\\n').join('\n')})
+      this.setState({presenterValue: props.task.presenter.split('|newline|').join('\n')})
     }
     if(props.answer){
       document.getElementById('export').innerHTML = props.answer.split('\n').join('<br>');
@@ -61,7 +61,9 @@ class Task extends React.Component {
           }}
         />
         <button onClick={() => {
-          this.props.updateTask(task.id, this.state.presenterValue.split('\n').join('\\n'));
+          // hacky I know
+          // note that this doesn't split escaped newlines which is good
+          this.props.updateTask(task.id, this.state.presenterValue.split('\n').join('|newline|'));
         }}>Save</button>
         <div>Import Questions; Note all fields must be strings</div>
         <CodeMirror

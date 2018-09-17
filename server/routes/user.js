@@ -8,10 +8,16 @@ module.exports = function(router){
     res.send(users);
   })
 
-  router.route('/user/create').post(async (req, res) => {
+  router.route('/user/create').post((req, res) => {
     // create a new user
-    User.createUser(req.query.username, req.query.password, Number(req.query.privilege));
-    res.sendStatus(200);
+    User.createUser(req.query.username, req.query.password, Number(req.query.privilege)).then(() => {
+      res.sendStatus(200);
+    }).catch((err) => {
+      if(err.code == '23505'){
+        return res.status(422).send('A user with that username already exists.');
+      }
+      res.sendStatus(500);
+    })
   })
 
   router.route('/user/authenticate').post(async (req, res, next) => {

@@ -18,7 +18,6 @@ class Login extends React.Component {
         <input id='passCreate' placeholder='Password'></input>
         <button onClick={() => {
           this.props.createAccount(document.getElementById('userCreate').value, document.getElementById('passCreate').value);
-          window.location.reload();
         }}>Create</button>
       </div>
     )
