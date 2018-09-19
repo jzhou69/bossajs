@@ -1,22 +1,24 @@
-var bookshelf = require('./../config/database').bookshelf;
-var Question = require('./question')
-var Model = bookshelf.model.prototype
+var sequelize = require('./../config/database').sequelize;
+var Sequelize = require('sequelize');
+var Question = require('./question');
 
-var Task = bookshelf.Model.extend({
-  tableName: 'tasks',
-  addQuestion: function(content){
-    var task = this;
-    Question.createQuestion(task.get('id'), content)
-  }
-}, {
-  createTask: function(name){
-    var task = new Task({
-      name: name,
-      redundancy: 1,
-      presenter: ''
-    })
-    return task.save();
-  }
+var Task = sequelize.define('tasks', {
+  name: Sequelize.STRING,
+  presenter: Sequelize.STRING,
+  redundancy: Sequelize.INTEGER
 })
 
-module.exports = bookshelf.model('Task', Task);
+Task.createTask = function(name){
+  return Task.create({
+    name: name,
+    redundancy: 1,
+    presenter: ''
+  })
+}
+
+Task.prototype.addQuestion = function(content){
+  var task = this;
+  Question.createQuestion(task.get('id'), content)
+}
+
+module.exports = Task

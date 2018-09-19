@@ -1,23 +1,25 @@
-var bookshelf = require('./../config/database').bookshelf;
+var sequelize = require('./../config/database').sequelize;
+var Sequelize = require('sequelize');
 
-var Question = bookshelf.Model.extend({
-  tableName: 'questions',
-  recordAnswer: function(answerString){
-    var question = this;
-    if(question.get('answer')){
-      return Promise.reject();
-    }
-    question.set('answer', answerString);
-    return question.save();
-  }
-}, {
-  createQuestion: function(taskId, content){
-    var question = new Question({
-      taskId: taskId,
-      content: content
-    });
-    return question.save()
-  }
+var Question = sequelize.define('questions', {
+  taskId: Sequelize.INTEGER,
+  content: Sequelize.JSONB,
+  answer: Sequelize.STRING
 })
 
-module.exports = bookshelf.model('Question', Question);
+Question.createQuestion = function(taskId, content){
+  return Question.create({
+    taskId: taskId,
+    content: content
+  });
+}
+
+Question.prototype.recordAnswer = function(answerString){
+  var question = this;
+  if(question.get('answer')){
+    return Promise.reject();
+  }
+  return question.update({answer: answerString});
+}
+
+module.exports = Question;

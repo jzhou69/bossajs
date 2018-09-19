@@ -1,14 +1,8 @@
-var config = {
-  client: 'postgresql',
-  connection: 'postgres://postgres:password@localhost:5432/bossa',
-  debug: false
-}
+var Sequelize = require('sequelize');
 
-var knex = require('knex')(config);
-module.exports.knex = knex;
-var bookshelf = require('bookshelf')(knex);
+var sequelize = new Sequelize('postgres://postgres:password@localhost:5432/bossa', {
+  logging: false,
+  operatorsAliases: false
+});
 
-bookshelf.plugin('registry');
-bookshelf.plugin('virtuals')
-
-module.exports.bookshelf = bookshelf;
+module.exports.sequelize = sequelize;

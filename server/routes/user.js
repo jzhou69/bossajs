@@ -4,7 +4,7 @@ var passport = require('passport')
 module.exports = function(router){
   router.route('/users').get(async (req, res) => {
     // fetches all users
-    var users = await User.fetchAll();
+    var users = await User.findAll();
     res.send(users);
   })
 

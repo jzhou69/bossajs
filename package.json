@@ -4,7 +4,6 @@
   "private": true,
   "dependencies": {
     "axios": "^0.18.0",
-    "bookshelf": "0.9.5",
     "codemirror": "^5.40.0",
     "cookie-parser": "^1.4.3",
     "cors": "^2.8.4",
@@ -22,7 +21,8 @@
     "react-router-redux": "^5.0.0-alpha.9",
     "react-scripts": "1.1.5",
     "redux": "^4.0.0",
-    "redux-thunk": "^2.3.0"
+    "redux-thunk": "^2.3.0",
+    "sequelize": "^4.38.1"
   },
   "scripts": {
     "start": "react-scripts start",

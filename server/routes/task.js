@@ -1,6 +1,7 @@
 var Task = require('../models/task')
 var Question = require('../models/question')
 var fs = require('fs')
+var Op = require('sequelize').Op;
 const privilege = require('../models/user').privileges
 
 function authorize(level){
@@ -18,7 +19,7 @@ function authorize(level){
 module.exports = function(router){
   router.route('/tasks').get(async (req, res) => {
     // fetches all tasks
-    var tasks = await Task.fetchAll();
+    var tasks = await Task.findAll();
     res.send(tasks);
   })
 
@@ -37,9 +38,9 @@ module.exports = function(router){
 
   router.route('/task').get(async (req, res) => {
     // get info for a task
-    var task = await Task.where({id: req.query.taskId}).fetch();
-    var total = await Question.query({where: {taskId: req.query.taskId}}).count()
-    var completed = await Question.query({where: {taskId: req.query.taskId}}).count('answer')
+    var task = await Task.findById(req.query.taskId);
+    var total = await Question.count({where: {taskId: req.query.taskId}});
+    var completed = await Question.count({where: {taskId: req.query.taskId, answer: {[Op.ne]: null}}});
     res.send(Object.assign(task.toJSON(), {
       completion: `${completed}/${total}`,
       completed: total == completed && total != 0
@@ -48,7 +49,7 @@ module.exports = function(router){
 
   router.route('/task/update').post(authorize(privilege['REVIEWER']), async (req, res) => {
     //update settings for task
-    var task = await Task.where({id: req.query.taskId}).fetch();
+    var task = await Task.findById(req.query.taskId);
     //req.query.redundancy && task.set('redundancy', req.query.redundancy);
     //req.query.name && task.set('name', req.query.name);
     req.query.presenter && task.set('presenter', req.query.presenter);
@@ -58,10 +59,8 @@ module.exports = function(router){
 
   router.route('/task/question').get(authorize(privilege['CONTRIBUTOR']), async (req, res) => {
     //get an unanswered question
-    var task = await Task.where({id: req.query.taskId}).fetch();
-    var question = await Question.query((qb) => {
-      qb.where('taskId', '=', req.query.taskId).andWhere('answer', null)
-    }).fetch();
+    var task = await Task.findById(req.query.taskId);
+    var question = await Question.findOne({where: {taskId: req.query.taskId, answer: null}});
     if(question){
       res.send(Object.assign(question.toJSON(), {
         presenter: task.get('presenter')
@@ -75,7 +74,7 @@ module.exports = function(router){
 
   router.route('/task/question/string').post(authorize(privilege['REVIEWER']), async (req, res) => {
     //add question to task in the form of a string
-    var task = await Task.where({id: req.query.taskId}).fetch();
+    var task = await Task.findById(req.query.taskId);
     var questions = JSON.parse(req.query.questions)
     questions.forEach((question) => {
       task.addQuestion(question);
@@ -85,7 +84,7 @@ module.exports = function(router){
 
   router.route('/task/question/noauth').post(async (req, res) => {
     //this is the same as /task/question/string, except it requires no auth; used for programmatically adding questions
-    var task = await Task.where({id: req.query.taskId}).fetch();
+    var task = await Task.findById(req.query.taskId);
     var questions = JSON.parse(req.query.questions)
     questions.forEach((question) => {
       task.addQuestion(question);
@@ -95,14 +94,14 @@ module.exports = function(router){
 
   router.route('/task/question').delete(authorize(privilege['REVIEWER']), async (req, res) => {
     //delete question from task
-    var question = await Question.where({id: req.query.questionId}).fetch();
+    var question = await Question.findById(req.query.questionId);
     question.destroy()
     res.sendStatus(200);
   })
 
   router.route('/task/question/answer').post(authorize(privilege['CONTRIBUTOR']), async (req, res) => {
     //record answer for question
-    var question = await Question.where({id: req.query.questionId}).fetch();
+    var question = await Question.findById(req.query.questionId);
     question.recordAnswer(req.query.answer).then(() => {
       res.sendStatus(200);
     }).catch(() => {
@@ -113,7 +112,7 @@ module.exports = function(router){
 
   router.route('/task/export').get(async (req, res) => {
     //export answers for all questions
-    var questions = await Question.where({taskId: req.query.taskId}).fetchAll();
+    var questions = await Question.findAll({ where: {taskId: req.query.taskId} });
     var content = questions.map(question => question.get('answer'));
     content.filter(n => n); // filter out undefined entries
     content = content.join('\n');

@@ -10,7 +10,7 @@ module.exports = function(app){
   app.use(passport.session());
 
   passport.use(new LocalStrategy(async (username, password, done) => {
-    var user = await User.where({username: username}).fetch();
+    var user = await User.findOne({where: {username: username}});
     if(!user || !user.verifyPassword(password)){
       return done(null, false);
     }
@@ -22,7 +22,7 @@ module.exports = function(app){
   });
 
   passport.deserializeUser((id, done) => {
-    User.where({id: id}).fetch().then((user) => {
+    User.findOne({where: {id: id}}).then((user) => {
       done(null, user);
     }).catch((err) => {
       done(err);
