@@ -1,6 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux';
 import { loadTasks, createTask } from './../redux/actions/actions'
+import './../stylesheets/Buttons.css'
 
 var mapStateToProps = (state) => {
     return {
@@ -14,21 +15,10 @@ class Tasks extends React.Component {
   }
 
   renderTasks(tasks){
-    var buttonStyle = {
-      font: 'bold 11px Arial',
-      textDecoration: 'none',
-      backgroundColor: '#33e0ff',
-      color: 'white',
-      padding: '2px 6px 2px 6px',
-      borderTop: '1px solid #CCCCCC',
-      borderRight: '1px solid #333333',
-      borderBottom: '1px solid #333333',
-      borderLeft: '1px solid #CCCCCC'
-    }
     return tasks.map((task) => {
       return (
         <div style={{margin: '10px', borderStyle: 'groove', paddingBottom: '20px'}}>
-          <a href={'/task/' + task.id} style={buttonStyle}>{task.name}</a>
+          <a href={'/task/' + task.id} className='buttonLink'>{task.name}</a>
         </div>
       )
     })

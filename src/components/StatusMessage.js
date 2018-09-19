@@ -1,5 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux';
+import './../stylesheets/StatusMessage.css'
 
 var mapStateToProps = (state) => {
   return {
@@ -9,13 +10,11 @@ var mapStateToProps = (state) => {
 
 class StatusMessage extends React.Component {
   render(){
-    return (
-      <div>
-        {
-          this.props.error ? <div>{this.props.error}</div> : null
-        }
-      </div>
-    )
+    if(this.props.error){
+      return (<div id='message'>{this.props.error}</div>)
+    } else {
+      return (null);
+    }
   }
 }
 

@@ -1,0 +1,15 @@
+#toolbar {
+  top: 0px;
+  background-color: lightblue;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.left {
+  display: inline;
+}
+
+#right {
+  display: inline;
+  float: right;
+}

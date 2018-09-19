@@ -1,6 +1,8 @@
 import React from 'react'
 import { connect } from 'react-redux';
 import { verifyLogin } from './../redux/actions/actions'
+import './../stylesheets/LoginBar.css'
+import './../stylesheets/Buttons.css'
 
 var mapStateToProps = (state) => {
     return {
@@ -26,13 +28,17 @@ class LoginBar extends React.Component {
       '3': 'a contributor'
     }
     return (
-      <div>{user.username}: You are { privilegeMap[user.privilege] }</div>
+      <React.Fragment>
+        <a href='/wip' className='left'>{user.username}</a>
+        <div className='left'>: You are { privilegeMap[user.privilege] }</div>
+        <a href='/login' id='right' className='buttonLink'>Login on a different account</a>
+      </React.Fragment>
     )
   }
 
   render(){
     return (
-      <div>
+      <div id='toolbar'>
         {this.props.user.id ? this.renderLoggedIn() : this.renderNotLoggedIn()}
       </div>
     )

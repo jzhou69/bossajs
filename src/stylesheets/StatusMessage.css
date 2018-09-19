@@ -1,0 +1,6 @@
+#message {
+  position: sticky;
+  top: 0px;
+  z-index: 1000;
+  background-color: red;
+}
