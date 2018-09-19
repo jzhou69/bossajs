@@ -5,14 +5,16 @@ var Question = require('./question');
 var Task = sequelize.define('tasks', {
   name: Sequelize.STRING,
   presenter: Sequelize.STRING,
-  redundancy: Sequelize.INTEGER
+  redundancy: Sequelize.INTEGER,
+  userId: Sequelize.INTEGER
 })
 
-Task.createTask = function(name){
+Task.createTask = function(name, userId){
   return Task.create({
     name: name,
     redundancy: 1,
-    presenter: ''
+    presenter: '',
+    userId: userId
   })
 }
 

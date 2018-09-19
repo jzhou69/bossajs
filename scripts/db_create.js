@@ -10,6 +10,7 @@ knex.schema.createTable('tasks', function(table){
   table.string('name');
   table.text('presenter','longtext');
   table.integer('redundancy');
+  table.integer('userId');
   table.time('createdAt');
   table.time('updatedAt');
   table.unique('name');
@@ -19,6 +20,7 @@ knex.schema.createTable('tasks', function(table){
     table.integer('taskId');
     table.jsonb('content');
     table.text('answer', 'longtext');
+    table.integer('answererId');
     table.time('updatedAt');
     table.time('createdAt');
   })

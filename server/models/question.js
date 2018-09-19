@@ -4,7 +4,8 @@ var Sequelize = require('sequelize');
 var Question = sequelize.define('questions', {
   taskId: Sequelize.INTEGER,
   content: Sequelize.JSONB,
-  answer: Sequelize.STRING
+  answer: Sequelize.STRING,
+  answererId: Sequelize.INTEGER
 })
 
 Question.createQuestion = function(taskId, content){
@@ -14,12 +15,12 @@ Question.createQuestion = function(taskId, content){
   });
 }
 
-Question.prototype.recordAnswer = function(answerString){
+Question.prototype.recordAnswer = function(answerString, userId){
   var question = this;
   if(question.get('answer')){
     return Promise.reject();
   }
-  return question.update({answer: answerString});
+  return question.update({answer: answerString, answererId: userId});
 }
 
 module.exports = Question;

@@ -26,10 +26,10 @@ module.exports = function(router){
   router.route('/task').post(authorize(privilege['REVIEWER']), async (req, res) => {
     // create a new task with specified name
     // TODO: enforce unique name
-    var task = await Task.createTask(req.query.taskName).then(() => {
+    var task = await Task.createTask(req.query.taskName, req.user.get('id')).then(() => {
       res.sendStatus(200);
     }).catch((err) => {
-      if(err.code == '23505'){
+      if(err.parent.code == '23505'){
         return res.status(422).send('A task with that name already exists.');
       }
       res.sendStatus(500);
@@ -102,7 +102,7 @@ module.exports = function(router){
   router.route('/task/question/answer').post(authorize(privilege['CONTRIBUTOR']), async (req, res) => {
     //record answer for question
     var question = await Question.findById(req.query.questionId);
-    question.recordAnswer(req.query.answer).then(() => {
+    question.recordAnswer(req.query.answer, req.user.get('id')).then(() => {
       res.sendStatus(200);
     }).catch(() => {
       // TODO: deal with multiple people trying to answer a question
