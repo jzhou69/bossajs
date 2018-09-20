@@ -17,8 +17,10 @@ class Tasks extends React.Component {
   renderTasks(tasks){
     return tasks.map((task) => {
       return (
-        <div style={{margin: '10px', borderStyle: 'groove', paddingBottom: '20px'}}>
-          <a href={'/task/' + task.id} className='buttonLink'>{task.name}</a>
+        <div style={{display: 'flex'}}>
+          <div style={{margin: '10px', borderStyle: 'groove', paddingBottom: '20px'}}>
+            <a href={`/task/${task.id}`} className='buttonLink'>{task.name}</a>
+            </div>
         </div>
       )
     })
@@ -28,9 +30,7 @@ class Tasks extends React.Component {
     return (
       <div>
         <h3>Tasks</h3>
-        <div style={{display: 'flex'}}>
-          {this.renderTasks(this.props.tasks)}
-        </div>
+        {this.renderTasks(this.props.tasks)}
         <div>Create Task</div>
         <input id='newTaskName' placeholder='Task Name'></input>
         <button onClick={() => {

@@ -2,7 +2,7 @@ const defaultState = {
   error: '',
   user: {}
 };
-// TODO: add user field to state
+// TODO: add message field to state?
 
 export default (state = defaultState, action) => {
   switch (action.type) {

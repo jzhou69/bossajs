@@ -19,21 +19,30 @@ function authorize(level){
 module.exports = function(router){
   router.route('/tasks').get(async (req, res) => {
     // fetches all tasks
-    var tasks = await Task.findAll();
+    var tasks = await Task.findAll({where: {isPublished: true}});
     res.send(tasks);
   })
 
-  router.route('/task').post(authorize(privilege['REVIEWER']), async (req, res) => {
+  router.route('/task').post(authorize(privilege['REVIEWER']), (req, res) => {
     // create a new task with specified name
-    // TODO: enforce unique name
-    var task = await Task.createTask(req.query.taskName, req.user.get('id')).then(() => {
-      res.sendStatus(200);
+    Task.createTask(req.query.taskName, req.user.get('id')).then((task) => {
+      res.send(task);
     }).catch((err) => {
       if(err.parent.code == '23505'){
         return res.status(422).send('A task with that name already exists.');
       }
       res.sendStatus(500);
     })
+  })
+
+  router.route('/task/publish').post(authorize(privilege['REVIEWER']), async (req, res) => {
+    // publish a task
+    var task = await Task.findById(req.query.taskId);
+    if(task.get('userId') != req.user.get('id')){
+      res.status(401).send('Cannot publish another user\'s task');
+    }
+    await task.update({isPublished: true});
+    res.sendStatus(200);
   })
 
   router.route('/task').get(async (req, res) => {
@@ -50,10 +59,9 @@ module.exports = function(router){
   router.route('/task/update').post(authorize(privilege['REVIEWER']), async (req, res) => {
     //update settings for task
     var task = await Task.findById(req.query.taskId);
-    //req.query.redundancy && task.set('redundancy', req.query.redundancy);
-    //req.query.name && task.set('name', req.query.name);
-    req.query.presenter && task.set('presenter', req.query.presenter);
-    await task.save()
+    req.query.redundancy && (task.redundancy = parseInt(req.query.redundancy));
+    req.query.presenter && (task.presenter = req.query.presenter);
+    await task.save();
     res.sendStatus(200);
   })
 
@@ -89,13 +97,6 @@ module.exports = function(router){
     questions.forEach((question) => {
       task.addQuestion(question);
     })
-    res.sendStatus(200);
-  })
-
-  router.route('/task/question').delete(authorize(privilege['REVIEWER']), async (req, res) => {
-    //delete question from task
-    var question = await Question.findById(req.query.questionId);
-    question.destroy()
     res.sendStatus(200);
   })
 

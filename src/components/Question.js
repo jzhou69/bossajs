@@ -52,9 +52,6 @@ class Question extends React.Component {
 
   render(){
     var question = this.props.question
-    if(question.done){
-      window.location = `/task/${this.props.match.params.id}`
-    }
     var presenter = question.presenter
     if(presenter){
       presenter = presenter.split('|newline|').join('\n')

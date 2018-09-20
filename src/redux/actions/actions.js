@@ -25,14 +25,28 @@ export function loadTasks(){
 export function createTask(name){
   return (dispatch) => {
     return axios.post(`${url}task?taskName=${name}`).then((res) => {
+      window.location = `task/${res.data.id}`;
+    }).catch(dispatchError.bind(undefined, dispatch))
+  }
+}
+
+export function updateTask(id, presenter, redundancy){
+  return (dispatch) => {
+    var queryString = `${url}task/update?taskId=${id}&`;
+    if(presenter){
+      queryString += `presenter=${presenter}`;
+    } else {
+      queryString += `redundancy=${redundancy}`;
+    }
+    return axios.post(queryString).then(() => {
       window.location.reload();
     }).catch(dispatchError.bind(undefined, dispatch))
   }
 }
 
-export function updateTask(id, presenter){
+export function publishTask(id){
   return (dispatch) => {
-    return axios.post(`${url}task/update?taskId=${id}&presenter=${presenter}`).then(() => {
+    return axios.post(`${url}task/publish?taskId=${id}`).then(() => {
       window.location.reload();
     }).catch(dispatchError.bind(undefined, dispatch))
   }
@@ -59,7 +73,11 @@ export function loadQuestion(_taskId){
   return (dispatch) => {
     return axios.get(`${url}task/question?taskId=${_taskId}`).then((res) => {
       let question = res.data;
-      dispatch({type:'LOAD_QUESTION', question: question});
+      if(question.done){
+        window.location = `/task/${_taskId}`
+      } else {
+        dispatch({type:'LOAD_QUESTION', question: question});
+      }
     }).catch(dispatchError.bind(undefined, dispatch))
   }
 }
@@ -102,6 +120,15 @@ export function createAccount(username, password){
   return (dispatch) => {
     axios.post(`${url}user/create?username=${username}&password=${password}`).then(() => {
       window.location.reload();
+    }).catch(dispatchError.bind(undefined, dispatch))
+  }
+}
+
+export function loadUserDetails(userId){
+  return (dispatch) => {
+    return axios.get(`${url}user?id=${userId}`).then((res) => {
+      let data = res.data;
+      dispatch({type:'USER_DETAILS', user: data.user, publishedTasks: data.published, unpublishedTasks: data.unpublished});
     }).catch(dispatchError.bind(undefined, dispatch))
   }
 }

@@ -29,7 +29,7 @@ class LoginBar extends React.Component {
     }
     return (
       <React.Fragment>
-        <a href='/wip' className='left'>{user.username}</a>
+        <a href={`/user/${user.id}`} className='left'>{user.username}</a>
         <div className='left'>: You are { privilegeMap[user.privilege] }</div>
         <a href='/login' id='right' className='buttonLink'>Login on a different account</a>
       </React.Fragment>

@@ -11,6 +11,7 @@ knex.schema.createTable('tasks', function(table){
   table.text('presenter','longtext');
   table.integer('redundancy');
   table.integer('userId');
+  table.boolean('isPublished');
   table.time('createdAt');
   table.time('updatedAt');
   table.unique('name');
