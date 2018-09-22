@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux';
-import { loadTask, updateTask, publishTask, addQuestions, exportAnswers } from './../redux/actions/actions'
+import { loadTask, updateTask, publishTask, addQuestions, exportAnswers, createRedundancyTask } from './../redux/actions/actions'
 import {Controlled as CodeMirror} from 'react-codemirror2'
 import 'codemirror/lib/codemirror.css';
 import 'codemirror/theme/monokai.css';
@@ -40,6 +40,7 @@ class Task extends React.Component {
       <div>
         <button>QA some questions</button>
         <button onClick={() => this.props.exportAnswers(this.props.task.id)}>Export results</button>
+        <button onClick={() => this.props.createRedundancyTask(this.props.task.id)}>Create redundancy QA task</button>
         <div id="export"></div>
       </div>
     )
@@ -153,4 +154,4 @@ class Task extends React.Component {
   }
 }
 
-export default connect(mapStateToProps, { loadTask, updateTask, publishTask, addQuestions, exportAnswers })(Task);
+export default connect(mapStateToProps, { loadTask, updateTask, publishTask, addQuestions, exportAnswers, createRedundancyTask })(Task);

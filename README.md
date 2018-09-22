@@ -7,6 +7,7 @@ BossaJS is an application for creating tasks. Features:
 * answer questions
 * export answers
 * user authorization
+* redundancy and redundancy QA
 
 To run the backend server, first create the database with `node scripts/db_create.js`. Then run `node server/index.js`. Due to the way this app uses cookies, please only run one instance of the server.
 

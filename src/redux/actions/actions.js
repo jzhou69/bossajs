@@ -99,6 +99,15 @@ export function exportAnswers(id){
   }
 }
 
+export function createRedundancyTask(id){
+  return (dispatch) => {
+    axios.post(`${url}task/redundancyqa?id=${id}`).then((res) => {
+      let task = res.data;
+      window.location = `/task/${task.id}`
+    }).catch(dispatchError.bind(undefined, dispatch))
+  }
+}
+
 export function login(username, password){
   return (dispatch) => {
     axios.post(`${url}user/authenticate?username=${username}&password=${password}`).then(() => {

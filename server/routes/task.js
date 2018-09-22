@@ -119,13 +119,21 @@ module.exports = function(router){
   router.route('/task/export').get(async (req, res) => {
     //export answers for all questions
     var questions = await Question.findAll({ where: {taskId: req.query.taskId} });
+    var errors = 0;
     var answers = questions.reduce((rv, question) => {
       ans = question.get('answer');
       Object.keys(ans).forEach((ind) => {
         rv.push('' + ind + ': ' + ans[ind]);
       })
+      for(let i=0; i<Object.values(ans).length; i++){
+        if(Object.values(ans)[i] != Object.values(ans)[0]){
+          errors++;
+          break;
+        }
+      }
       return rv;
     }, [])
+    answers.unshift('Redundancy errors: ' + errors);
     content = answers.join('\n');
     res.send(content);
     /*var fileName = __dirname + '/test.txt';
@@ -135,5 +143,17 @@ module.exports = function(router){
       }
       res.sendFile(fileName);
     });*/
+  })
+
+  router.route('/task/redundancyqa').post(authorize(privilege['REVIEWER']), async (req, res) => {
+    // creates redundancy qa task
+    var task = await Task.findById(req.query.id);
+    if(task.get('userId') != req.user.get('id')){
+      res.status(401).send('You must be the creator of this task to perform that operation.');
+    }
+    var newTask = await task.createResolveRedundancyTask().catch(() => {
+      res.status(422).send('Could not create task. This could be because a redundancy QA task already exists.');
+    })
+    res.send(newTask);
   })
 }
