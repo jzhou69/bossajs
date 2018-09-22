@@ -49,7 +49,7 @@ module.exports = function(router){
     // get info for a task
     var task = await Task.findById(req.query.taskId);
     var total = await Question.count({where: {taskId: req.query.taskId}});
-    var completed = await Question.count({where: {taskId: req.query.taskId, answer: {[Op.ne]: null}}});
+    var completed = await Question.count({where: {taskId: req.query.taskId, answerCount: {[Op.gte]: task.get('redundancy')}}});
     res.send(Object.assign(task.toJSON(), {
       completion: `${completed}/${total}`,
       completed: total == completed && total != 0
@@ -68,7 +68,12 @@ module.exports = function(router){
   router.route('/task/question').get(authorize(privilege['CONTRIBUTOR']), async (req, res) => {
     //get an unanswered question
     var task = await Task.findById(req.query.taskId);
-    var question = await Question.findOne({where: {taskId: req.query.taskId, answer: null}});
+    var queryObject = {
+      taskId: req.query.taskId,
+      answerCount: {[Op.lt]: task.get('redundancy')},
+    }
+    queryObject['answer.' + req.user.get('id')] = null;
+    var question = await Question.findOne({where: queryObject});
     if(question){
       res.send(Object.assign(question.toJSON(), {
         presenter: task.get('presenter')
@@ -114,9 +119,14 @@ module.exports = function(router){
   router.route('/task/export').get(async (req, res) => {
     //export answers for all questions
     var questions = await Question.findAll({ where: {taskId: req.query.taskId} });
-    var content = questions.map(question => question.get('answer'));
-    content.filter(n => n); // filter out undefined entries
-    content = content.join('\n');
+    var answers = questions.reduce((rv, question) => {
+      ans = question.get('answer');
+      Object.keys(ans).forEach((ind) => {
+        rv.push('' + ind + ': ' + ans[ind]);
+      })
+      return rv;
+    }, [])
+    content = answers.join('\n');
     res.send(content);
     /*var fileName = __dirname + '/test.txt';
     fs.writeFile(fileName, content, 'utf8', function(err){

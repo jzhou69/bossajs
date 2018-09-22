@@ -20,8 +20,8 @@ knex.schema.createTable('tasks', function(table){
     table.increments('id').primary();
     table.integer('taskId');
     table.jsonb('content');
-    table.text('answer', 'longtext');
-    table.integer('answererId');
+    table.jsonb('answer');
+    table.integer('answerCount');
     table.time('updatedAt');
     table.time('createdAt');
   })
